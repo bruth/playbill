@@ -30,7 +30,7 @@ type TemplateData struct {
 	Commands []*cli.Command
 }
 
-var Command = cli.Command{
+var Command = &cli.Command{
 	Name: "help",
 
 	Template: tmpl,

@@ -25,7 +25,7 @@ func main() {
 	// The help command is not in the commands.Map, so this must be
 	// check manually
 	if name == help.Command.Name {
-		help.Command.Run(&help.Command, os.Args[2:])
+		help.Command.Run(help.Command, os.Args[2:])
 	}
 
 	args := os.Args[2:]
