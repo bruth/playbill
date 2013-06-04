@@ -5,16 +5,50 @@
 
 */
 
-package help
+package main
 
 import (
 	"fmt"
 	"io"
 	"os"
 	"playbill/cli"
-	"playbill/commands"
+	"playbill/cli/cast"
+	"playbill/cli/info"
+	"playbill/cli/list"
+	"playbill/cli/log"
+	"playbill/cli/perform"
+	"playbill/cli/rehearse"
 	"text/template"
 )
+
+type commandList []*cli.Command
+type commandMap map[string]*cli.Command
+
+// List of commands
+var CommandList = commandList{
+	cast.Command,
+	info.Command,
+	list.Command,
+	log.Command,
+	rehearse.Command,
+	perform.Command,
+}
+
+// Create a map of commands by name and aliases
+func NewCommandMap(cmds ...*cli.Command) commandMap {
+	cm := make(commandMap, len(cmds))
+	for _, cmd := range cmds {
+		cm[cmd.Name] = cmd
+		// Associate aliases
+		for _, alias := range cmd.Aliases {
+			cm[alias] = cmd
+		}
+	}
+	return cm
+}
+
+// Map (by name and aliases) of commands
+var CommandMap = NewCommandMap(CommandList...)
 
 var tmpl = `usage: playbill command
 
@@ -30,7 +64,7 @@ type TemplateData struct {
 	Commands []*cli.Command
 }
 
-var Command = &cli.Command{
+var HelpCommand = &cli.Command{
 	Name: "help",
 
 	Template: tmpl,
@@ -40,7 +74,7 @@ var Command = &cli.Command{
 
 		// Exexute the template rendering with supplied data
 		t.Execute(w, TemplateData{
-			commands.List,
+			CommandList,
 		})
 	},
 
@@ -49,7 +83,7 @@ var Command = &cli.Command{
 			c.Usage()
 		}
 
-		cmd, ok := commands.Map[args[0]]
+		cmd, ok := CommandMap[args[0]]
 
 		if !ok {
 			fmt.Println("unknown command:", args[0])
