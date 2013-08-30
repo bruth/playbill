@@ -1,19 +1,18 @@
-package rehearse
+package cli
 
 import (
 	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
-	"playbill/cli"
 )
 
-var Command = &cli.Command{
+var RehearseCmd = &Cmd{
 	Name: "rehearse",
 
 	Short: "Runs a rehearsal of all or some of the scenes",
 
-	Run: func(c *cli.Command, args []string) {
+	Run: func(c *Cmd, args []string) {
 		var stdout bytes.Buffer
 
 		c.Flags.Parse(args)

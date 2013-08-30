@@ -15,20 +15,20 @@ func main() {
 
 	// Special case, fallback to help
 	if len(os.Args) < 2 {
-		HelpCommand.Usage()
+		HelpCmd.Usage()
 	}
 
 	name := os.Args[1]
 
 	// The help command is not in the commands.Map, so this must be
 	// check manually
-	if name == HelpCommand.Name {
-		HelpCommand.Run(HelpCommand, os.Args[2:])
+	if name == HelpCmd.Name {
+		HelpCmd.Run(HelpCmd, os.Args[2:])
 	}
 
 	args := os.Args[2:]
 
-	cmd, ok := CommandMap[name]
+	cmd, ok := CmdMap[name]
 
 	if !ok {
 		fmt.Println("unknown command:", name)

@@ -9,34 +9,25 @@ package main
 
 import (
 	"fmt"
+	"github.com/bruth/playbill/cli"
 	"io"
 	"os"
-	"playbill/cli"
-	"playbill/cli/cast"
-	"playbill/cli/info"
-	"playbill/cli/list"
-	"playbill/cli/log"
-	"playbill/cli/perform"
-	"playbill/cli/rehearse"
 	"text/template"
 )
 
-type commandList []*cli.Command
-type commandMap map[string]*cli.Command
-
 // List of commands
-var CommandList = commandList{
-	cast.Command,
-	info.Command,
-	list.Command,
-	log.Command,
-	rehearse.Command,
-	perform.Command,
+var CmdList = []*cli.Cmd{
+	cli.CastCmd,
+	cli.InfoCmd,
+	cli.ListCmd,
+	cli.LogCmd,
+	cli.RehearseCmd,
+	cli.PerformCmd,
 }
 
 // Create a map of commands by name and aliases
-func NewCommandMap(cmds ...*cli.Command) commandMap {
-	cm := make(commandMap, len(cmds))
+func NewCmdMap(cmds ...*cli.Cmd) map[string]*cli.Cmd {
+	cm := make(map[string]*cli.Cmd, len(cmds))
 	for _, cmd := range cmds {
 		cm[cmd.Name] = cmd
 		// Associate aliases
@@ -48,42 +39,42 @@ func NewCommandMap(cmds ...*cli.Command) commandMap {
 }
 
 // Map (by name and aliases) of commands
-var CommandMap = NewCommandMap(CommandList...)
+var CmdMap = NewCmdMap(CmdList...)
 
-var tmpl = `usage: playbill command
+var helpUsage = `usage: playbill <command> [options]
 
-Playbill is a management tool for ETL workflows.
+Playbill is a process management tool for ETL workflows.
 
-The available commands are:{{range .Commands}}
+The available commands are:{{range .Cmds}}
     {{.Name | printf "%-12s"}} {{.Short}}{{end}}
 
 See 'playbill help <command>' for more information about a specific command.
 `
 
 type TemplateData struct {
-	Commands []*cli.Command
+	Cmds []*cli.Cmd
 }
 
-var HelpCommand = &cli.Command{
+var HelpCmd = &cli.Cmd{
 	Name: "help",
 
-	Template: tmpl,
+	UsageString: helpUsage,
 
-	TemplateHelper: func(c *cli.Command, w io.Writer) {
-		t := template.Must(template.New("usage").Parse(c.Template))
+	UsageHelper: func(c *cli.Cmd, w io.Writer) {
+		t := template.Must(template.New("usage").Parse(c.UsageString))
 
 		// Exexute the template rendering with supplied data
 		t.Execute(w, TemplateData{
-			CommandList,
+			CmdList,
 		})
 	},
 
-	Run: func(c *cli.Command, args []string) {
+	Run: func(c *cli.Cmd, args []string) {
 		if len(args) == 0 {
 			c.Usage()
 		}
 
-		cmd, ok := CommandMap[args[0]]
+		cmd, ok := CmdMap[args[0]]
 
 		if !ok {
 			fmt.Println("unknown command:", args[0])

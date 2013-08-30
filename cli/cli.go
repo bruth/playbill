@@ -1,9 +1,3 @@
-/*
-
-   Defines a Command struct for defining sub-commands and usage text.
-
-*/
-
 package cli
 
 import (
@@ -16,8 +10,8 @@ import (
 	"text/template"
 )
 
-// A Command is an implementation of a sub-command
-type Command struct {
+// A Cmd is an implementation of a sub-command
+type Cmd struct {
 	// Primary name of the command
 	Name string
 
@@ -27,27 +21,27 @@ type Command struct {
 	// Short is the short description shown in the 'help' command
 	Short string
 
-	// Template instance containing the usage/documentation
-	Template string
+	// Template string containing the usage/documentation
+	UsageString string
 
-	// Executes the template passing in any data or helpers
-	TemplateHelper func(c *Command, w io.Writer)
+	// Executes the usage string as a template, passing in any data or helpers
+	UsageHelper func(c *Cmd, w io.Writer)
 
 	// Flag is a set of flags specific to this command.
 	Flags flag.FlagSet
 
 	// Run runs the command.
 	// The args are the arguments after the command name.
-	Run func(c *Command, args []string)
+	Run func(c *Cmd, args []string)
 }
 
-func (c *Command) Usage() {
+func (c *Cmd) Usage() {
 	stdout := bytes.Buffer{}
 
-	if c.TemplateHelper != nil {
-		c.TemplateHelper(c, &stdout)
+	if c.UsageHelper != nil {
+		c.UsageHelper(c, &stdout)
 	} else {
-		t := template.Must(template.New("usage").Parse(c.Template))
+		t := template.Must(template.New("usage").Parse(c.UsageString))
 		err := t.Execute(&stdout, nil)
 		if err != nil {
 			panic(err)

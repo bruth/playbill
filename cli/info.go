@@ -1,10 +1,6 @@
-package info
+package cli
 
-import (
-	"playbill/cli"
-)
-
-var tmpl = `
+var infoUsage = `
 usage: playbill info <play>
 
 Prints info about a particular ETL workflow including:
@@ -15,9 +11,8 @@ Prints info about a particular ETL workflow including:
     - current progress (if in a run)
 `
 
-var Command = &cli.Command{
-	Name:     "info",
-	Aliases:  []string{"stat"},
-	Short:    "Prints info about an ETL workflow",
-	Template: tmpl,
+var InfoCmd = &Cmd{
+	Name:        "info",
+	Short:       "Prints info about an ETL workflow",
+	UsageString: infoUsage,
 }
