@@ -9,7 +9,7 @@ func TestCrewRenderPlain(t *testing.T) {
 	c := NewCrew("test")
 
 	// Set some variables
-	c.Vars = Vars{
+	c.Vars = map[string]interface{}{
 		"path": "/usr/local/bin",
 		"n":    4,
 		"x":    3.45,

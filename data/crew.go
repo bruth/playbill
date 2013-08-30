@@ -11,9 +11,6 @@ import (
 // all equivalent.
 var placholderRe = regexp.MustCompile("{{ *([^}]+?) *}}")
 
-type Vars map[string]interface{}
-type Env map[string]string
-
 // Render function for trivial template format. Takes a string with {{key}}
 func renderTemplate(t string, data map[string]interface{}) (string, error) {
 	matches := placholderRe.FindAllStringSubmatch(t, -1)
@@ -42,10 +39,10 @@ func renderTemplate(t string, data map[string]interface{}) (string, error) {
 // `Vars` defines the template variables. Crews are typically defined per host or
 // for isolated environments are a single host.
 type Crew struct {
-	Name string
-	Env  Env
-	Vars Vars
-	Dir  string
+	Name string                 `bson:"name" json:"name"`
+	Env  []string               `bson:"env" json:"env"`
+	Vars map[string]interface{} `bson:"vars" json:"vars"`
+	Dir  string                 `bson:"dir" json:"dir"`
 }
 
 // Parses and applies the template variables to a template string
@@ -57,5 +54,7 @@ func (c *Crew) Render(t string) (string, error) {
 func NewCrew(n string) *Crew {
 	return &Crew{
 		Name: n,
+		Env:  make([]string, 0),
+		Vars: map[string]interface{}{},
 	}
 }
