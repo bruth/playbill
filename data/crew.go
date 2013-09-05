@@ -58,3 +58,10 @@ func NewCrew(n string) *Crew {
 		Vars: map[string]interface{}{},
 	}
 }
+
+// Initializes a new crew from a file
+func ImportCrew(path string) (*Crew, error) {
+    var c Crew
+    err := ImportComponent(path, &c)
+    return &c, err
+}

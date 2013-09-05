@@ -114,3 +114,10 @@ func NewPlay(name string, description string) *Play {
 	}
 	return p
 }
+
+// Initializes a new play from a file
+func ImportPlay(path string) (*Play, error) {
+    var play Play
+    err := ImportComponent(path, &play)
+    return &play, err
+}
