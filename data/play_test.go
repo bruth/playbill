@@ -59,19 +59,19 @@ func TestPlayMoveScene(t *testing.T) {
 	assert.Equal(t, p.Scenes[1], s0)
 }
 
-func TestPlayPerform(t *testing.T) {
+func TestPlayRun(t *testing.T) {
 	p := NewPlay("P0", "")
 	c := &Crew{}
 
 	// Nothing to do..
-	pr, err := p.Perform(c)
+	pr, err := p.Run(c)
 	assert.Equal(t, err, nil)
 	assert.False(t, pr.Failed)
 
 	// Scene and routine
 	s0, _ := p.NewScene("S0", "")
 	s0.NewRoutine("echo", "foo")
-	pr, err = p.Perform(c)
+	pr, err = p.Run(c)
 	assert.Equal(t, err, nil)
 	assert.False(t, pr.Failed)
 }

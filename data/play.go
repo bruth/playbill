@@ -97,8 +97,8 @@ func (p *Play) MoveScene(i int, s *Scene) error {
 	return nil
 }
 
-// Perform the play
-func (p *Play) Perform(c *Crew) (*PlayRun, error) {
+// Run the play
+func (p *Play) Run(c *Crew) (*PlayRun, error) {
 	r := NewPlayRun(p, c)
 	r.Run()
 	return r, nil
