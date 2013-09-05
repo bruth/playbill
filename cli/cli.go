@@ -28,7 +28,7 @@ type Cmd struct {
 	UsageHelper func(c *Cmd, w io.Writer)
 
 	// Flag is a set of flags specific to this command.
-	Flags flag.FlagSet
+	Flags *flag.FlagSet
 
 	// Run runs the command.
 	// The args are the arguments after the command name.
